@@ -18,3 +18,6 @@ def count_distinct_sums_and_products(items):
     return len(seen_numbers)
 
 # Not sure if this will pass all the tests for example try [1,2]
+
+
+print (count_distinct_sums_and_products([2,3,5,7,9,11]))
