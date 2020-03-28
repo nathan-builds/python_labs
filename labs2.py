@@ -367,27 +367,31 @@ def is_cyclops(n):
 
 def iterated_remove_pairs(items):
     i = 1
-    while i < len(items) - 1:
+    while True:
+        if not items or len(items) == 1:
+            return items
 
         if items[i - 1] == items[i]:
-            del (items[i - 1:i + 1])
+            del (items[i])
+            del (items[i - 1])
             i = 1
-        elif items[i + 1] == items[i]:
-            del (items[i:i + 2])
-            i = 1
+
+
         else:
             i += 1
+            if i == len(items):
+                return items
 
-    if items[0] == items[1]:
-        items.clear()
+    return items
 
 
 ######################################################################
 
 def md(a, b, n):
-    hash_test = {}
-    v = 1
     counter = 0
+    hash_test = {1: counter}
+    counter += 1
+    v = 1
     flag = True
 
     if v == n:
@@ -398,16 +402,14 @@ def md(a, b, n):
         if v // a != 0 and v // a not in hash_test:
             hash_test.update({v // a: counter})
             v = v // a
-            counter += 1
-            if v == n:
-                return hash_test[v]
 
         else:
             hash_test.update({b * v: counter})
             v = b * v
-            counter += 1
-            if v == n:
-                return hash_test[v]
+
+        counter += 1
+        if v == n:
+            return hash_test[v]
 
 
 ######################################################################
@@ -540,7 +542,7 @@ def running_median_of_three(items):
     end_of_sub_list = 3
 
     if not items:
-        return[]
+        return []
 
     if len(items) == 1:
         ## just here for checking
@@ -561,7 +563,6 @@ def running_median_of_three(items):
         final_list.insert(0, items[0])
 
         return final_list
-
 
 
 ######################################################################
@@ -611,6 +612,7 @@ def safe_squares_knights(n, knights):
                         danger_squares.append(temp_list)
 
     return board_size - len(danger_squares)
+
 
 ######################################################################
 
@@ -907,9 +909,6 @@ def all_cyclic_shifts(text):
     return sorted(final_list)
 
 
-
-
-
 ######################################################################
 
 def group_equal(items):
@@ -932,16 +931,17 @@ def group_equal(items):
     final_list.append(temp_list)
     return final_list
 
+
 ######################################################################
 
 def detab(text, n=8, sub='$'):
     final_string = ''
-    count=0
+    count = 0
     for character in text:
 
         if character == '\t':
-            final_string+=sub
-            count+=1
+            final_string += sub
+            count += 1
             while count % n != 0:
                 final_string += sub
                 count += 1
@@ -953,5 +953,284 @@ def detab(text, n=8, sub='$'):
     return final_string
 
 
-string = 'Ilkka\tMarkus\tKokkarinen'
+######################################################################
+def count_consecutive_summers(n):
+    number_list = []
+    final_count = 0
 
+    start_of_sublist = 0
+    end_of_sublist = 1
+
+    for x in range(1, n + 1):
+        number_list.append(x)
+
+    while end_of_sublist < len(number_list):
+        sublist_sum = sum(number_list[start_of_sublist:end_of_sublist])
+        if sublist_sum == n:
+            final_count += 1
+            start_of_sublist += 1
+            end_of_sublist = start_of_sublist + 1
+        elif sublist_sum < n:
+            end_of_sublist += 1
+        elif sublist_sum > n:
+            start_of_sublist += 1
+            end_of_sublist = start_of_sublist + 1
+
+    return final_count + 1
+
+
+######################################################################
+def is_perfect_power(n):
+    b = 2
+    e = 1
+
+    while b ** 2 <= n:
+
+        if b ** e == n:
+            return True
+        elif b ** e < n:
+            e += 1
+        elif b ** e > n:
+            b += 1
+            e = 1
+
+    return False
+
+######################################################################
+def collapse_intervals(items):
+    temp_list = []
+    final_string = ''
+
+    if not items:
+        return ''
+
+    if len(items) == 1:
+        return str(items[0])
+
+    temp_list.append(items[0])
+    previous = items[0]
+
+    for current in items[1:]:
+        if current == previous + 1:
+            temp_list.append(current)
+            previous = current
+        else:
+            if len(temp_list) == 1:
+                final_string += str(temp_list[0])
+                final_string += ','
+                temp_list = []
+                temp_list.append(current)
+                previous = current
+            else:
+
+                final_string += str(temp_list[0])
+                final_string += '-'
+                final_string += str(temp_list[len(temp_list) - 1])
+                final_string += ','
+                temp_list = []
+                temp_list.append(current)
+                previous = current
+
+    if len(temp_list)==1:
+        final_string += str(temp_list[0])
+    else:
+
+        final_string += str(temp_list[0])
+        final_string += '-'
+        final_string += str(temp_list[len(temp_list) - 1])
+
+    return final_string
+
+######################################################################
+def is_zigzag(n):
+    n_as_string = str(n)
+
+    if len(n_as_string) == 1:
+        return True
+    current_status = ''
+    previous = int(n_as_string[1])
+
+    first_sum = int(n_as_string[1]) - int(n_as_string[0])
+
+    if first_sum > 0:
+        current_status = 'positive'
+    else:
+        current_status = 'negative'
+
+    for current in n_as_string[2:]:
+        if int(current) - int(previous) > 0:
+            if current_status == 'positive':
+                return False
+            else:
+                if current_status == 'positive':
+                    current_status = 'negative'
+                elif current_status == 'negative':
+                    current_status = 'positive'
+        elif int(current) - int(previous) < 0:
+            if current_status == 'negative':
+                return False
+            elif current_status == 'positive':
+                current_status = 'negative'
+        elif int(current) - int(previous) == 0:
+            return False
+
+        previous = current
+
+    return True
+
+######################################################################
+
+def count_divisibles_in_range(start, end, n):
+    if start == 0 and end == 0:
+        return 1
+
+    if start % n == 0:
+        return ((end // n) - (start // n)) + 1
+
+    return ((end // n) - (start // n))
+
+######################################################################
+
+def scrabble_value(word, multipliers):
+    points_scored = 0
+    scrabble_dict = {'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5,
+                     'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4,
+                     'w': 4, 'x': 8, 'y': 4, 'z': 10}
+    count=0
+    if multipliers == None:
+        for character in word:
+            points_scored += scrabble_dict[character]
+    else:
+
+        for character in word:
+            points_scored += scrabble_dict[character] * multipliers[count]
+            count+=1
+
+    return points_scored
+
+######################################################################
+
+def words_with_given_shape(words, shape):
+    letter_dictionary = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8, 'i': 9, 'j': 10, 'k': 11,
+                         'l': 12, 'm': 13, 'n': 14, 'o': 15, 'p': 16, 'q': 17, 'r': 18, 's': 19, 't': 20, 'u': 21,
+                         'v': 22,
+                         'w': 23, 'x': 24, 'y': 25, 'z': 26}
+    final_list = []
+    for word in words:
+        if len(word) == len(shape) + 1:
+
+            previous_character = word[0]
+            letter_shape = []
+
+            for character in word[1:]:
+
+                if letter_dictionary[character] > letter_dictionary[previous_character]:
+                    letter_shape.append(1)
+                elif letter_dictionary[character] < letter_dictionary[previous_character]:
+                    letter_shape.append(-1)
+                elif letter_dictionary[character] == letter_dictionary[previous_character]:
+                    letter_shape.append(0)
+
+                previous_character = character
+
+            if letter_shape == shape:
+                final_list.append(word)
+
+    return final_list
+
+######################################################################
+
+def reverse_ascending_sublists(items):
+    temp_list = []
+    final_list = []
+
+    if not items:
+        return []
+    previous = items[0]
+    temp_list.append(previous)
+
+    for current in items[1:]:
+        if current > previous:
+            temp_list.append(current)
+
+        else:
+            for num in reversed(temp_list):
+                final_list.append(num)
+            temp_list = []
+            temp_list.append(current)
+
+        previous = current
+
+    for num in reversed(temp_list):
+        final_list.append(num)
+
+    return final_list
+
+
+
+######################################################################
+
+def suppressed_digit_sum(n):
+
+    if n ==1:
+        return 0
+
+    new_n= list(str(n))
+    #print(new_n)
+    temp_number = ''
+    numbers_seen=[]
+    counter=0
+
+    for number in new_n:
+
+        temp_list = new_n.copy()
+        del temp_list[counter]
+        # print(temp_list)
+
+        for num in temp_list:
+            temp_number += str(num)
+            #print(temp_number)
+
+        if int(temp_number) not in numbers_seen:
+            numbers_seen.append(int(temp_number))
+
+        temp_number=''
+        counter+=1
+
+    return sum(numbers_seen)
+
+######################################################################
+def count_distinct_sums_and_products(items):
+    seen_numbers = set()
+    if len(items) == 1:
+        return 2
+    elif not items:
+        return 0
+    else:
+
+        for number in items:
+            for num in items:
+                addition = number + num
+                multiplication = number * num
+                if addition not in seen_numbers:
+                    seen_numbers.add(addition)
+                if multiplication not in seen_numbers:
+                    seen_numbers.add(multiplication)
+
+    return len(seen_numbers)
+
+######################################################################
+
+def first_missing_positive(items):
+    min_value = 1
+    seen_numbers = set()
+
+    for num in items:
+        seen_numbers.add(num)
+
+    while True:
+
+        if min_value not in seen_numbers:
+            return min_value
+        else:
+            min_value += 1
