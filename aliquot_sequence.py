@@ -38,6 +38,3 @@ def aliquot_sequence(n, giveup):
     return sequence
 
 
-# There could be a issue with finding duplicates which is when it should terminate, I may not have covered every situation
-
-print(aliquot_sequence(34, 100))
