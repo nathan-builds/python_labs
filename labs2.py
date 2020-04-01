@@ -5,36 +5,28 @@ from math import sqrt
 
 
 ######################################################################
-def riffle(items, out):
-    my_dict = {}
+def riffle(items, out=False):
     final_list = []
-    list_position_counter = 0
-
-    list_a = items[:len(items) // 2]  # Gets first half of list
-    list_b = items[len(items) // 2:]  # Gets second half of list
+    first_segment = items[:len(items) // 2]
+    second_segment = items[len(items) // 2:]
+    second_number_counter = 0
 
     if out:
-        for item in list_a:
-            my_dict.update({item: list_b[list_position_counter]})  # creates pairs in dictionary from both lists
-            list_position_counter += 1
+        for first_num in first_segment:
+            final_list.append(first_num)
+            final_list.append(second_segment[second_number_counter])
+            second_number_counter += 1
 
     else:
-        for item in list_b:
-            my_dict.update({item: list_a[list_position_counter]})
-            list_position_counter += 1
-
-    for key in my_dict:
-        final_list.append(key)
-        final_list.append(my_dict[key])  # had to do this in two steps to create a single list
+        for num in second_segment:
+            final_list.append(num)
+            final_list.append(first_segment[second_number_counter])
+            second_number_counter += 1
 
     return final_list
 
-
 ######################################################################
-
-seen_items = {}
-
-
+seen_items={}
 def aliquot_sequence(n, giveup):
     sequence = []
     sequence.append(n)
@@ -42,7 +34,8 @@ def aliquot_sequence(n, giveup):
     a = n
     divisor = 1
 
-    while len(sequence) <= giveup and 0 not in sequence:
+    while len(sequence) < giveup and 0 not in sequence:
+
 
         if a in seen_items:
             sequence.append(seen_items[a])
@@ -55,18 +48,24 @@ def aliquot_sequence(n, giveup):
                     temp_list.append(divisor)
                 divisor += 1
 
-        list_sum = sum(temp_list)  # gets sum of list which is what we're looking for
+            list_sum = sum(temp_list)  # gets sum of list which is what we're looking for
 
-        if list_sum in sequence:  # checks for value already appearing in sequence
-            return sequence
 
-        sequence.append(list_sum)  # adds it to list
-        seen_items.update({a: list_sum})  # stores it in dictionary to recall later
-        a = list_sum
-        temp_list.clear()
-        divisor = 1
+
+
+            if list_sum in sequence:  # checks for value already appearing in sequence
+                return sequence
+
+            sequence.append(list_sum)  # adds it to list
+            seen_items.update({a: list_sum})  # stores it in dictionary to recall later
+            a = list_sum
+            temp_list.clear()
+            divisor = 1
+
+
 
     return sequence
+
 
 
 # There could be a issue with finding duplicates which is when it should terminate, I may not have covered every situation
@@ -473,50 +472,6 @@ def only_odd_digits(n):
 
 
 ######################################################################
-
-def prime_factors(n):
-    if n == 0:  # catches edge case
-        return [0]
-
-    def is_prime(number_to_test):
-        if (number_to_test <= 1):
-            return False
-        if (number_to_test == 2):
-            return True
-        if (number_to_test % 2 == 0):
-            return False
-        i = 3
-        while i <= sqrt(number_to_test):
-            if number_to_test % i == 0:
-                return False
-            i = i + 2
-
-        return True
-
-    def prime_generator(limit):
-        a = 1
-        while a < (limit / 2) + 100:  # this might not be large enough a number, check with tester
-            a += 1
-            if is_prime(a):
-                yield a
-
-    my_primes = prime_generator(n)
-
-    factor_list = []
-    factor = next(my_primes)
-
-    while n != 1:
-        if n % factor == 0:
-            while n % factor == 0:
-                factor_list.append(factor)
-                n = n / factor
-                if n % factor != 0:
-                    factor = next(my_primes)
-
-        else:
-            factor = next(my_primes)
-
-    return factor_list
 
 
 ######################################################################
@@ -1234,3 +1189,56 @@ def first_missing_positive(items):
             return min_value
         else:
             min_value += 1
+
+######################################################################
+def is_permutation(items, n):
+    number_dictionary = {}
+    total_number_dictionary = {}
+    set_of_items= set(items)
+
+
+    number_set={num for num in range(1,n+1)}
+
+    if set_of_items== number_set:
+        return True
+    else:
+        return False
+
+
+######################################################################
+def prime_factors(n):
+    factor_list=[]
+
+
+    while n % 2 == 0:
+        factor_list.append(2)
+        n = n // 2
+
+
+    for number in range(3,int(math.sqrt(n))+1,2):
+
+        while n % number== 0:
+            factor_list.append(number)
+            n = n // number
+
+
+    if n > 2:
+        factor_list.append(n)
+
+    return factor_list
+######################################################################
+def remove_after_kth(items, k):
+    count_dictionary = {}
+    final_result = []
+    for elem in items:
+        count_dictionary.update({elem: 0})
+
+    for elem in items:
+        count_dictionary[elem] += 1
+        if count_dictionary[elem] <= k:
+            final_result.append(elem)
+
+    return final_result
+
+
+
