@@ -990,33 +990,53 @@ def scrabble_value(word, multipliers):
 
 ######################################################################
 
+word_shape_dict = {}
+
+
 def words_with_given_shape(words, shape):
     letter_dictionary = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8, 'i': 9, 'j': 10, 'k': 11,
                          'l': 12, 'm': 13, 'n': 14, 'o': 15, 'p': 16, 'q': 17, 'r': 18, 's': 19, 't': 20, 'u': 21,
                          'v': 22,
                          'w': 23, 'x': 24, 'y': 25, 'z': 26}
-    final_list = []
-    for word in words:
-        if len(word) == len(shape) + 1:
 
+    def build_key(letter_list):
+        letter_string = ''
+        for val in letter_list:
+            letter_string += str(val)
+
+        return letter_string
+
+    if not word_shape_dict:
+        final_list = []
+        for word in words:
             previous_character = word[0]
             letter_shape = []
-
             for character in word[1:]:
-
                 if letter_dictionary[character] > letter_dictionary[previous_character]:
                     letter_shape.append(1)
                 elif letter_dictionary[character] < letter_dictionary[previous_character]:
                     letter_shape.append(-1)
                 elif letter_dictionary[character] == letter_dictionary[previous_character]:
                     letter_shape.append(0)
-
                 previous_character = character
 
-            if letter_shape == shape:
-                final_list.append(word)
+            hash_key = build_key(letter_shape)
 
-    return final_list
+            if hash_key in word_shape_dict:
+
+                word_shape_dict[hash_key].append(word)
+            else:
+                word_shape_dict.update({hash_key: [word]})
+
+    else:
+        answer_key = build_key(shape)
+
+        if answer_key in word_shape_dict:
+            return word_shape_dict[answer_key]
+        else:
+            return []
+
+    return []
 
 
 ######################################################################
@@ -1057,7 +1077,7 @@ def suppressed_digit_sum(n):
     new_n = list(str(n))
     # print(new_n)
     temp_number = ''
-    numbers_seen = []
+    numbers_seen = set()
     counter = 0
 
     for number in new_n:
@@ -1067,11 +1087,11 @@ def suppressed_digit_sum(n):
         # print(temp_list)
 
         for num in temp_list:
-            temp_number += str(num)
+            temp_number += num
             # print(temp_number)
 
         if int(temp_number) not in numbers_seen:
-            numbers_seen.append(int(temp_number))
+            numbers_seen.add(int(temp_number))
 
         temp_number = ''
         counter += 1
@@ -1133,24 +1153,22 @@ def is_permutation(items, n):
 
 ######################################################################
 def prime_factors(n):
-    given_number = n
-    answer = []
-    lower_range_to_check = 3
+    factor_list = []
 
-    while given_number % 2 == 0:
-        answer.append(2)
-        given_number = given_number // 2
+    while n % 2 == 0:
+        factor_list.append(2)
+        n = n // 2
 
-    for number in range(lower_range_to_check, int(math.sqrt(given_number)) + 1, 2):
+    for number in range(3, int(math.sqrt(n)) + 1, 2):
 
-        while given_number % number == 0:
-            answer.append(number)
-            given_number = given_number // number
+        while n % number == 0:
+            factor_list.append(number)
+            n = n // number
 
-    if given_number > 2:
-        answer.append(given_number)
+    if n > 2:
+        factor_list.append(n)
 
-    return answer
+    return factor_list
 
 
 ######################################################################
@@ -1328,9 +1346,3 @@ def bridge_hand_shorthand(hand):
         sorted_clubs)
 
 
-print(bridge_hand_shorthand(
-    [('ace', 'spades'), ('king', 'spades'), ('queen', 'spades'),
-     ('jack', 'spades'), ('ten', 'spades'), ('nine', 'spades'),
-     ('eight', 'spades'), ('seven', 'spades'), ('six', 'spades'),
-     ('five', 'spades'), ('four', 'spades'), ('trey', 'spades'),
-     ('deuce', 'diamonds')]))
