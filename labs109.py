@@ -646,22 +646,24 @@ def ztaloc(shape):
 ######################################################################
 
 def prime_factors(n):
-    factor_list = []
+    answer_list = []
+    number_to_factor=n
+    range_to_check=3
 
-    while n % 2 == 0:
-        factor_list.append(2)
-        n = n // 2
+    while number_to_factor % 2 == 0:
+        answer_list.append(2)
+        number_to_factor= number_to_factor // 2
 
-    for number in range(3, int(math.sqrt(n)) + 1, 2):
+    for number in range(range_to_check, int(math.sqrt(number_to_factor)) + 1, 2):
 
-        while n % number == 0:
-            factor_list.append(number)
-            n = n // number
+        while number_to_factor % number == 0:
+            answer_list.append(number)
+            number_to_factor = number_to_factor // number
 
-    if n > 2:
-        factor_list.append(n)
+    if number_to_factor > 2:
+        answer_list.append(number_to_factor)
 
-    return factor_list
+    return answer_list
 
 ######################################################################
 
