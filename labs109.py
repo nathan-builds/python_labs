@@ -644,6 +644,27 @@ def ztaloc(shape):
 
 
 ######################################################################
+
+def prime_factors(n):
+    factor_list = []
+
+    while n % 2 == 0:
+        factor_list.append(2)
+        n = n // 2
+
+    for number in range(3, int(math.sqrt(n)) + 1, 2):
+
+        while n % number == 0:
+            factor_list.append(number)
+            n = n // number
+
+    if n > 2:
+        factor_list.append(n)
+
+    return factor_list
+
+######################################################################
+
 def tribonacci(n, start=(1, 1, 1)):
     sequence_list = list(start)
     counter = 2
@@ -1070,6 +1091,9 @@ def reverse_ascending_sublists(items):
 
 ######################################################################
 
+
+
+
 def suppressed_digit_sum(n):
     if n == 1:
         return 0
@@ -1152,23 +1176,6 @@ def is_permutation(items, n):
 
 
 ######################################################################
-def prime_factors(n):
-    factor_list = []
-
-    while n % 2 == 0:
-        factor_list.append(2)
-        n = n // 2
-
-    for number in range(3, int(math.sqrt(n)) + 1, 2):
-
-        while n % number == 0:
-            factor_list.append(number)
-            n = n // number
-
-    if n > 2:
-        factor_list.append(n)
-
-    return factor_list
 
 
 ######################################################################
